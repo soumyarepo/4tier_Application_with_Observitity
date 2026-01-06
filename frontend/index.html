@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CDBOI | Central Digital Bank of India</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      color: #333;
+    }
+
+    header {
+      background-color: #003366;
+      color: white;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+    }
+
+    .container {
+      padding: 40px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .welcome {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #003366;
+    }
+
+    button {
+      background-color: #0072ce;
+      border: none;
+      padding: 12px 20px;
+      color: white;
+      font-size: 15px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+
+    .balance {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: 60px;
+      background-color: #003366;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>CDBOI – Central Digital Bank of India</h1>
+    <nav>
+      <a href="#">Dashboard</a>
+      <a href="#">Accounts</a>
+      <a href="#">Transfers</a>
+      <a href="#">Support</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="welcome">Welcome to CDBOI NetBanking</div>
+    <div class="subtitle">Secure. Reliable. Digital Banking Platform</div>
+
+    <div class="card-grid">
+      <div class="card">
+        <h3>Account Balance</h3>
+        <p>View your current savings account balance.</p>
+        <button onclick="getBalance()">Check Balance</button>
+        <div class="balance" id="balance"></div>
+      </div>
+
+      <div class="card">
+        <h3>Fund Transfer</h3>
+        <p>Transfer funds securely between accounts.</p>
+        <button disabled>Coming Soon</button>
+      </div>
+
+      <div class="card">
+        <h3>Transaction History</h3>
+        <p>View recent transactions and statements.</p>
+        <button disabled>Coming Soon</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2026 Central Digital Bank of India (CDBOI). All rights reserved.
+  </footer>
+
+  <script>
+    function getBalance() {
+      fetch('/account/balance')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('balance').innerText =
+            "₹ " + data.balance;
+        })
+        .catch(err => {
+          document.getElementById('balance').innerText =
+            "Unable to fetch balance";
+        });
+    }
+  </script>
+
+</body>
+</html>
