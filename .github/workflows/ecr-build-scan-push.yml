@@ -57,17 +57,23 @@ jobs:
             echo "BUILD_CONTEXT=backend/${{ matrix.service }}" >> $GITHUB_ENV
           fi
 
-      # 5️⃣ Build Docker image
+      # =========================
+      # 🔨 BUILD STAGE
+      # =========================
       - name: Build Docker image
         run: |
-          echo "🐳 Building image for service: ${{ matrix.service }}"
-          echo "📦 Build context: $BUILD_CONTEXT"
+          echo "🔨 BUILD STAGE"
+          echo "Service       : ${{ matrix.service }}"
+          echo "Build context : $BUILD_CONTEXT"
+          echo "Image tag     : $IMAGE_TAG"
 
           docker build \
             -t $ECR_REGISTRY/${{ matrix.service }}:${IMAGE_TAG} \
             $BUILD_CONTEXT
 
-      # 6️⃣ Trivy security scan
+      # =========================
+      # 🔍 SCAN STAGE
+      # =========================
       - name: Trivy image scan
         uses: aquasecurity/trivy-action@0.24.0
         with:
@@ -76,8 +82,25 @@ jobs:
           exit-code: 1
           ignore-unfixed: true
 
-      # 7️⃣ Push image to ECR
-      - name: Push Docker image
+      # =========================
+      # 🚀 PUSH STAGE
+      # =========================
+      - name: Push Docker image to ECR
         run: |
-          echo "🚀 Pushing image to ECR: ${{ matrix.service }}"
+          echo "🚀 PUSH STAGE"
+          echo "Pushing image: $ECR_REGISTRY/${{ matrix.service }}:${IMAGE_TAG}"
+
           docker push $ECR_REGISTRY/${{ matrix.service }}:${IMAGE_TAG}
+
+      # =========================
+      # 📦 POST-PUSH INFO
+      # =========================
+      - name: Print pushed image details
+        run: |
+          echo "✅ IMAGE PUSHED SUCCESSFULLY"
+          echo "----------------------------------"
+          echo "Service     : ${{ matrix.service }}"
+          echo "Image       : $ECR_REGISTRY/${{ matrix.service }}"
+          echo "Tag         : $IMAGE_TAG"
+          echo "Full Image  : $ECR_REGISTRY/${{ matrix.service }}:${IMAGE_TAG}"
+          echo "----------------------------------"
