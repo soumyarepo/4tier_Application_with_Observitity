@@ -24,19 +24,19 @@ jobs:
           - frontend
 
     steps:
-      # 1️⃣ Checkout code
+      # Checkout source code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 🐛 DEBUG: Print workspace structure
+      # Debug: Print workspace structure
       - name: Debug workspace
         run: |
-          echo "📂 Current directory:"
+          echo "Current directory:"
           pwd
-          echo "📂 Repository structure:"
+          echo "Repository structure:"
           ls -R
 
-      # 2️⃣ Configure AWS credentials
+      # Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -44,11 +44,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # 3️⃣ Login to Amazon ECR
+      # Login to Amazon ECR
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      # 4️⃣ Resolve build context dynamically
+      # Resolve build context dynamically
       - name: Set build context
         run: |
           if [ "${{ matrix.service }}" = "frontend" ]; then
@@ -57,12 +57,10 @@ jobs:
             echo "BUILD_CONTEXT=backend/${{ matrix.service }}" >> $GITHUB_ENV
           fi
 
-      # =========================
-      # 🔨 BUILD STAGE
-      # =========================
+      # Build Docker image
       - name: Build Docker image
         run: |
-          echo "🔨 BUILD STAGE"
+          echo "BUILD STAGE"
           echo "Service       : ${{ matrix.service }}"
           echo "Build context : $BUILD_CONTEXT"
           echo "Image tag     : $IMAGE_TAG"
@@ -71,9 +69,7 @@ jobs:
             -t $ECR_REGISTRY/${{ matrix.service }}:${IMAGE_TAG} \
             $BUILD_CONTEXT
 
-      # =========================
-      # 🔍 SCAN STAGE
-      # =========================
+      # Scan Docker image using Trivy
       - name: Trivy image scan
         uses: aquasecurity/trivy-action@0.24.0
         with:
@@ -82,22 +78,18 @@ jobs:
           exit-code: 1
           ignore-unfixed: true
 
-      # =========================
-      # 🚀 PUSH STAGE
-      # =========================
+      # Push Docker image to Amazon ECR
       - name: Push Docker image to ECR
         run: |
-          echo "🚀 PUSH STAGE"
+          echo "PUSH STAGE"
           echo "Pushing image: $ECR_REGISTRY/${{ matrix.service }}:${IMAGE_TAG}"
 
           docker push $ECR_REGISTRY/${{ matrix.service }}:${IMAGE_TAG}
 
-      # =========================
-      # 📦 POST-PUSH INFO
-      # =========================
+      # Print image details after push
       - name: Print pushed image details
         run: |
-          echo "✅ IMAGE PUSHED SUCCESSFULLY"
+          echo "IMAGE PUSHED SUCCESSFULLY"
           echo "----------------------------------"
           echo "Service     : ${{ matrix.service }}"
           echo "Image       : $ECR_REGISTRY/${{ matrix.service }}"

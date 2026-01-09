@@ -1,0 +1,66 @@
+global:
+  imageRegistry: 096803082838.dkr.ecr.ap-south-1.amazonaws.com
+  imageTag: latest
+  pullPolicy: IfNotPresent
+
+services:
+  auth-service:
+    enabled: true
+    port: 8080
+    replicas: 2
+
+  account-service:
+    enabled: true
+    port: 8081
+    replicas: 2
+
+  transaction-service:
+    enabled: true
+    port: 8082
+    replicas: 2
+
+  frontend:
+    enabled: true
+    port: 80
+    replicas: 2
+
+resources:
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+  requests:
+    cpu: "200m"
+    memory: "256Mi"
+
+probes:
+  liveness:
+    path: /health/live
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readiness:
+    path: /health/ready
+    initialDelaySeconds: 15
+    periodSeconds: 5
+
+service:
+  type: LoadBalancer
+
+ingress:
+  enabled: true
+  className: alb
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+  host: cdboi.local
+
+services:
+  frontend:
+    port: 80
+  auth:
+    port: 5000
+  account:
+    port: 5001
+  transaction:
+    port: 5002
+
