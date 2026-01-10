@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transaction-service
+spec:
+  replicas: {{ .Values.transaction.replicas }}
+  selector:
+    matchLabels:
+      app: transaction
+  template:
+    metadata:
+      labels:
+        app: transaction
+    spec:
+      containers:
+        - name: transaction
+          image: "{{ .Values.transaction.image.repository }}:{{ .Values.global.imageTag }}"
+          ports:
+            - containerPort: {{ .Values.transaction.port }}
