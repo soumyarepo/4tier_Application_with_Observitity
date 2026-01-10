@@ -151,10 +151,11 @@ jobs:
 
           helm upgrade --install "$HELM_RELEASE_NAME" "$HELM_CHART_PATH" \
             --namespace "$K8S_NAMESPACE" \
-            --create-namespace \
             --set global.imageTag="$IMAGE_TAG"
 
       # 7️⃣ Post-deploy validation
       - name: Verify deployment
         run: |
-          kubectl get all -n "$K8S_NAMESPACE"
+          kubectl get deploy,svc,pod,ingress -n "$K8S_NAMESPACE"
+          helm list -n default
+
