@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend
+  name: transaction-service
 spec:
-  type: {{ .Values.frontend.service.type }}
+  type: {{ .Values.transaction.service.type }}
   selector:
-    app: frontend
+    app: transaction-service
   ports:
-    - port: {{ .Values.frontend.service.port }}
-      targetPort: {{ .Values.frontend.service.targetPort }}
+    - port: {{ .Values.transaction.service.port }}
+      targetPort: {{ .Values.transaction.service.targetPort }}

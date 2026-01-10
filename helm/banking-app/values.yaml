@@ -7,8 +7,13 @@ frontend:
     repository: 096803082838.dkr.ecr.ap-south-1.amazonaws.com/frontend
   service:
     type: LoadBalancer
+    port: 80       # Service port
+    targetPort: 80 # Container port
+  containerPort: 80
+  livenessProbe:
     port: 80
-    targetPort: 80
+  readinessProbe:
+    port: 80
 
 auth:
   replicas: 1
@@ -16,6 +21,12 @@ auth:
     repository: 096803082838.dkr.ecr.ap-south-1.amazonaws.com/auth-service
   service:
     type: ClusterIP
+    port: 5000
+    targetPort: 5000
+  containerPort: 5000
+  livenessProbe:
+    port: 5000
+  readinessProbe:
     port: 5000
 
 account:
@@ -25,6 +36,12 @@ account:
   service:
     type: ClusterIP
     port: 5001
+    targetPort: 5001
+  containerPort: 5001
+  livenessProbe:
+    port: 5001
+  readinessProbe:
+    port: 5001
 
 transaction:
   replicas: 1
@@ -32,4 +49,10 @@ transaction:
     repository: 096803082838.dkr.ecr.ap-south-1.amazonaws.com/transaction-service
   service:
     type: ClusterIP
+    port: 5002
+    targetPort: 5002
+  containerPort: 5002
+  livenessProbe:
+    port: 5002
+  readinessProbe:
     port: 5002

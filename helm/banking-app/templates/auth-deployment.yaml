@@ -6,14 +6,26 @@ spec:
   replicas: {{ .Values.auth.replicas }}
   selector:
     matchLabels:
-      app: auth
+      app: auth-service
   template:
     metadata:
       labels:
-        app: auth
+        app: auth-service
     spec:
       containers:
-        - name: auth
-          image: "{{ .Values.auth.image.repository }}:{{ .Values.global.imageTag }}"
+        - name: auth-service
+          image: {{ .Values.auth.image.repository }}:{{ .Values.global.imageTag }}
           ports:
-            - containerPort: {{ .Values.auth.port }}
+            - containerPort: {{ .Values.auth.containerPort }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.auth.livenessProbe.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: {{ .Values.auth.readinessProbe.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5

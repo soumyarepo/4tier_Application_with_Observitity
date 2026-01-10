@@ -6,14 +6,26 @@ spec:
   replicas: {{ .Values.account.replicas }}
   selector:
     matchLabels:
-      app: account
+      app: account-service
   template:
     metadata:
       labels:
-        app: account
+        app: account-service
     spec:
       containers:
-        - name: account
-          image: "{{ .Values.account.image.repository }}:{{ .Values.global.imageTag }}"
+        - name: account-service
+          image: {{ .Values.account.image.repository }}:{{ .Values.global.imageTag }}
           ports:
-            - containerPort: {{ .Values.account.port }}
+            - containerPort: {{ .Values.account.containerPort }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.account.livenessProbe.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: {{ .Values.account.readinessProbe.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5

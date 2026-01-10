@@ -8,4 +8,4 @@ spec:
     app: auth-service
   ports:
     - port: {{ .Values.auth.service.port }}
-      targetPort: {{ .Values.auth.service.port }}
+      targetPort: {{ .Values.auth.service.targetPort }}

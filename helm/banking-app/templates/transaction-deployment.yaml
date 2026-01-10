@@ -6,14 +6,26 @@ spec:
   replicas: {{ .Values.transaction.replicas }}
   selector:
     matchLabels:
-      app: transaction
+      app: transaction-service
   template:
     metadata:
       labels:
-        app: transaction
+        app: transaction-service
     spec:
       containers:
-        - name: transaction
-          image: "{{ .Values.transaction.image.repository }}:{{ .Values.global.imageTag }}"
+        - name: transaction-service
+          image: {{ .Values.transaction.image.repository }}:{{ .Values.global.imageTag }}
           ports:
-            - containerPort: {{ .Values.transaction.port }}
+            - containerPort: {{ .Values.transaction.containerPort }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.transaction.livenessProbe.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: {{ .Values.transaction.readinessProbe.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
