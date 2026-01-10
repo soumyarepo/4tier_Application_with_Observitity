@@ -140,6 +140,19 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v4
 
+      # Pre-deploy: Uninstall old Helm release if exists
+      - name: Uninstall existing Helm release (if any)
+        run: |
+            RELEASE_NAME="banking-app"
+            NAMESPACE="default"
+
+               if helm ls -n $NAMESPACE | grep -q "$RELEASE_NAME"; then
+              echo "🗑 Existing Helm release found: $RELEASE_NAME. Uninstalling..."
+            helm uninstall $RELEASE_NAME -n $NAMESPACE
+             else
+              echo "✅ No existing release found. Continuing..."
+              fi
+
       # 6️⃣ Helm Deploy (Idempotent)
       - name: Deploy using Helm
         run: |
