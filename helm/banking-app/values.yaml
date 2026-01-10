@@ -5,27 +5,31 @@ frontend:
   replicas: 2
   image:
     repository: 096803082838.dkr.ecr.ap-south-1.amazonaws.com/frontend
-  port: 80
+  service:
+    type: LoadBalancer
+    port: 80
+    targetPort: 80
 
 auth:
   replicas: 1
   image:
     repository: 096803082838.dkr.ecr.ap-south-1.amazonaws.com/auth-service
-  port: 5000
+  service:
+    type: ClusterIP
+    port: 5000
 
 account:
   replicas: 1
   image:
     repository: 096803082838.dkr.ecr.ap-south-1.amazonaws.com/account-service
-  port: 5001
+  service:
+    type: ClusterIP
+    port: 5001
 
 transaction:
   replicas: 1
   image:
     repository: 096803082838.dkr.ecr.ap-south-1.amazonaws.com/transaction-service
-  port: 5002
-
-ingress:
-  enabled: true
-  host: cdboi.local
-  scheme: internet-facing
+  service:
+    type: ClusterIP
+    port: 5002

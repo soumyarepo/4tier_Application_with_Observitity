@@ -3,8 +3,9 @@ kind: Service
 metadata:
   name: auth-service
 spec:
+  type: {{ .Values.auth.service.type }}
   selector:
-    app: auth
+    app: auth-service
   ports:
-    - port: {{ .Values.auth.port }}
-      targetPort: {{ .Values.auth.port }}
+    - port: {{ .Values.auth.service.port }}
+      targetPort: {{ .Values.auth.service.port }}
