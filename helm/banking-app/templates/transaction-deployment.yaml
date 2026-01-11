@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: transaction-service
+  labels:
+    app: transaction-service
 spec:
   replicas: {{ .Values.transaction.replicas }}
   selector:
@@ -20,12 +22,8 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: {{ .Values.transaction.livenessProbe.port }}
-            initialDelaySeconds: 10
-            periodSeconds: 10
+              port: {{ .Values.transaction.containerPort }}
           readinessProbe:
             httpGet:
               path: /ready
-              port: {{ .Values.transaction.readinessProbe.port }}
-            initialDelaySeconds: 5
-            periodSeconds: 5
+              port: {{ .Values.transaction.containerPort }}

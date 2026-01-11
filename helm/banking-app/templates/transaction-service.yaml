@@ -3,8 +3,9 @@ kind: Service
 metadata:
   name: transaction-service
 spec:
+  type: {{ .Values.transaction.service.type }}
   selector:
-    app: transaction
+    app: transaction-service
   ports:
-    - port: {{ .Values.transaction.port }}
-      targetPort: {{ .Values.transaction.port }}
+    - port: {{ .Values.transaction.service.port }}
+      targetPort: {{ .Values.transaction.service.targetPort }}

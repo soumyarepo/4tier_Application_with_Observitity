@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth-service
+  labels:
+    app: auth-service
 spec:
   replicas: {{ .Values.auth.replicas }}
   selector:
@@ -20,12 +22,8 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: {{ .Values.auth.livenessProbe.port }}
-            initialDelaySeconds: 10
-            periodSeconds: 10
+              port: {{ .Values.auth.containerPort }}
           readinessProbe:
             httpGet:
               path: /ready
-              port: {{ .Values.auth.readinessProbe.port }}
-            initialDelaySeconds: 5
-            periodSeconds: 5
+              port: {{ .Values.auth.containerPort }}

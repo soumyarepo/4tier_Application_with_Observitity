@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  labels:
+    app: frontend
 spec:
   replicas: {{ .Values.frontend.replicas }}
   selector:
@@ -19,13 +21,9 @@ spec:
             - containerPort: {{ .Values.frontend.containerPort }}
           livenessProbe:
             httpGet:
-              path: /
-              port: {{ .Values.frontend.livenessProbe.port }}
-            initialDelaySeconds: 10
-            periodSeconds: 10
+              path: /health
+              port: {{ .Values.frontend.containerPort }}
           readinessProbe:
             httpGet:
-              path: /
-              port: {{ .Values.frontend.readinessProbe.port }}
-            initialDelaySeconds: 5
-            periodSeconds: 5
+              path: /ready
+              port: {{ .Values.frontend.containerPort }}
