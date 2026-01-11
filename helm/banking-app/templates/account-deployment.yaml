@@ -19,11 +19,3 @@ spec:
           image: {{ .Values.account.image.repository }}:{{ .Values.global.imageTag }}
           ports:
             - containerPort: {{ .Values.account.containerPort }}
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: {{ .Values.account.containerPort }}
-          readinessProbe:
-            httpGet:
-              path: /ready
-              port: {{ .Values.account.containerPort }}

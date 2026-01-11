@@ -19,11 +19,3 @@ spec:
           image: {{ .Values.transaction.image.repository }}:{{ .Values.global.imageTag }}
           ports:
             - containerPort: {{ .Values.transaction.containerPort }}
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: {{ .Values.transaction.containerPort }}
-          readinessProbe:
-            httpGet:
-              path: /ready
-              port: {{ .Values.transaction.containerPort }}
